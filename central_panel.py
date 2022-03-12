@@ -69,9 +69,9 @@ def menu(today, counts):
 
 
 def show_top_keys(keys):
-	""" Show top5 keys most pressed """
+	""" Show top10 keys most pressed """
 	clear()
-	print('# Top5 keys most-used:')
+	print('# Top10 keys most-used:')
 	keys_pressed = sorted(keys.items(), key=itemgetter(1), reverse=True)
 	for index, item in enumerate(keys_pressed[:10]):
 		index = str(index + 1)
@@ -134,6 +134,7 @@ def get_graphic():
 	clear()
 	print('# Weekly graphic:')
 	print(len(counts), 'days of logs.')
+	plt.figure(figsize=(8, 4.5))
 	plt.plot(counts.keys(), counts.values())
 	plt.title(f'Weekly graphic - {date.today().isoformat()}')
 	plt.grid(True)
@@ -141,5 +142,7 @@ def get_graphic():
 
 
 if (__name__ == '__main__'):
+	import sys
+	sys.stdout.write("\x1b]2;Keylogger Panel\x07")
 	os.chdir(os.path.dirname(__file__))
 	main()
