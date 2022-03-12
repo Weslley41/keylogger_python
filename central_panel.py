@@ -23,12 +23,13 @@ def main():
 
 	clear()
 
-	choice = menu(today, log["counted_keys"])
-	while choice:
+	while True:
+		choice = menu(today, log["counted_keys"])
 		if (choice == '1'):
 			show_top_keys(log["keys_pressed"])
 		elif (choice == '2'):
-			get_log(log, today)
+			while (get_log() == '2'):
+				get_log()
 		elif (choice == '3'):
 			get_graphic()
 		elif (choice == '0'):
@@ -37,8 +38,6 @@ def main():
 			print('Invalid choice.')
 			sleep(1)
 			clear()
-
-		choice = menu(today, log["counted_keys"])
 
 
 def clear():
@@ -55,10 +54,11 @@ def menu(today, counts):
 	...
 	Return user choice.
 	"""
+	print(' Menu '.center(50, '-'))
 	print(f'Today: {today} - counted keys: {counts}')
 	print("""
 	1. Show top keys
-	2. Get today's log
+	2. Get log file
 	3. Get weekly graphic
 	0. Exit
 	""")
@@ -73,25 +73,40 @@ def show_top_keys(keys):
 	clear()
 	print('# Top5 keys most-used:')
 	keys_pressed = sorted(keys.items(), key=itemgetter(1), reverse=True)
-	for key, value in keys_pressed[:5]:
-		print(f'Key: {key}\nCount: {value}\n')
+	for index, item in enumerate(keys_pressed[:10]):
+		index = str(index + 1)
+		print(f'{index.rjust(2)}º: {item[1]} - {item[0]}')
 
 
-def get_log(log, today):
-	""" Get today's log, saved as file """
+def get_log():
+	""" Get a log of day, saved as file """
 	clear()
-	path = os.path.dirname(__file__) + '/user_logs/'
-	filename = f"daily_log_{today}.txt"
-	log_file = open(path + filename, "w")
+	print('Enter 0 for back to menu.')
+	day = input('Enter a day (YYYY-MM-DD): ')
+	if (day == '0'):
+		return '0'
 
-	log_file.write(f'Today: {today}\nKeys pressed: {log["counted_keys"]}\n\n')
-	log_file.write('Key'.center(11) + '|' + 'Count'.center(10) + '\n')
+	path = os.path.dirname(__file__)
+	filename = f"daily_log_{day}"
+	try:
+		log_file_r = open(path + '/system_logs/' + filename + '.json', "r")
+		log = json.load(log_file_r)
+		log_file_w = open(path + '/user_logs/' + filename + '.txt', "w")
+	except FileNotFoundError:
+		print('Not are logs for this day or format is wrong.')
+		sleep(1.5)
+		return '2'
+
+	log_file_w.write(f'Day: {day}\nKeys pressed: {log["counted_keys"]}\n\n')
+	log_file_w.write('Key'.center(11) + '|' + 'Count'.center(10) + '\n')
 	keys_pressed = sorted(log['keys_pressed'].items(), key=itemgetter(1), reverse=True)
 	for key, value in keys_pressed:
-		log_file.write(f'{key.ljust(10)} | {str(value).rjust(5)}\n')
+		log_file_w.write(f'{key.ljust(10)} | {str(value).rjust(5)}\n')
 
-	print(f"# Log: create a file in '{path}daily_log_{today}.txt'")
+	print(f"created a log file in '{path}/user_logs/daily_log_{day}.txt'")
 	sleep(1)
+
+	return True
 
 
 def get_graphic():

