@@ -74,7 +74,7 @@ ctrl       |   128
 
 🇧🇷 Para ter acesso à todos os recursos basta executar
 
-`pip install -r requirements.txt`
+`sudo pip install -r requirements.txt`
 
 🇺🇸 For read the keyboard you need install: [keyboard](https://pypi.org/project/keyboard/).
 
@@ -82,7 +82,7 @@ ctrl       |   128
 
 🇺🇸 For get full access:
 
-`pip install -r requirements.txt`
+`sudo pip install -r requirements.txt`
 
 ## Autostart
 ### Run on startup
@@ -95,12 +95,13 @@ ctrl       |   128
 🇺🇸 First, i created a script `start_keylogger.sh` to start the python program.
 
 ```
-path=/path/to/file.py
+#!/bin/sh
 
+path=/path/to/run.py
 exec sudo python $path & exit &
 ```
 
-🇧🇷 e dei permissão de execução para ele com:
+🇧🇷 E dei permissão de execução para ele com:
 
 🇺🇸 Give execution permission:
 
