@@ -1,24 +1,56 @@
+import json
+import os
+import sys
+import mysql.connector
 
 class Key():
-	_key_code = None
 	_key_name = None
 	_count = 0
+	_connection = None
 
-	def __init__(self, key_code):
-		self._key_code = key_code
+	def __init__(self, key_name):
+		self._key_name = key_name
 
 
 	def __repr__(self):
-		return f'Instance of Key: (code: {self._key_code}, name: {self._key_name})'
+		return f'Instance of Key: (name: {self._key_name}, count: {self._count})'
+
+
+	def connect(self):
+		try:
+			mysql_configs = json.loads(os.getenv('MYSQL_CONFIG'))
+			connection = mysql.connector.connect(**mysql_configs)
+		except TypeError:
+			print("Can't load .env configs")
+			sys.exit()
+		except mysql.connector.Error as error:
+			match error.errno:
+				case 1045:
+					print(f"Access denied to user: {mysql_configs['user']}")
+					sys.exit()
+				case 1049:
+					print(f"Can't connect to database: {mysql_configs['database']}")
+					sys.exit()
+				case _:
+					print(error)
+					sys.exit()
+
+		self._connection = connection
+
+
+	def disconnect(self):
+		self._connection.close()
 
 
 	def increment(self):
-		self._key_code += 1
+		self._count += 1
 
 
 	def get_count(self, day=None):
 		if not day:
 			return self._count
+
+		return 0
 
 
 class Keyboard():
@@ -37,3 +69,10 @@ class Keyboard():
 	def get_count(self, day=None):
 		if not day:
 			return self._count
+
+		return 0
+
+# For tests
+key = Key('enter')
+key.connect()
+key.disconnect()
