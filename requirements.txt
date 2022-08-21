@@ -12,3 +12,5 @@
 
 keyboard
 mysql-connector-python
+pipenv
+pylint
