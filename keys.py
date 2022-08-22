@@ -63,13 +63,28 @@ class Key():
 
 	def increment(self):
 		self._count += 1
+		cursor = self._connect()
+		sql_update = "UPDATE keyboard_key SET count = %s\
+									WHERE (name = %s AND date = %s);"
+		cursor.execute(sql_update, (self._count, self._key_name, date.today()))
+
+		self._disconnect(cursor)
 
 
-	def get_count(self, day=None):
+	def count(self, day=None):
 		if not day:
 			return self._count
 
-		return 0
+		cursor = self._connect()
+		sql_query = "select count FROM keyboard_key WHERE (name = %s AND date = %s);"
+		cursor.execute(sql_query, (self._key_name, day))
+		result = cursor.fetchone()
+
+		if not result:
+			print('No data from this date or invalid format.')
+			return 0
+		else:
+			return result['count']
 
 
 class Keyboard():
@@ -93,5 +108,8 @@ class Keyboard():
 
 # For tests
 key = Key('enter')
-key.connect()
-key.disconnect()
+print(key)
+key.increment()
+print(key)
+print(key.count('2022-08-22'))
+print(key.count('2022-08-21'))
