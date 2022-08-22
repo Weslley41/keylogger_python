@@ -1,3 +1,4 @@
+from datetime import date
 import json
 import os
 import sys
@@ -10,6 +11,20 @@ class Key():
 
 	def __init__(self, key_name):
 		self._key_name = key_name
+		cursor = self._connect()
+		sql_query = "SELECT count FROM keyboard_key\
+								WHERE(name=%s AND date=%s);"
+		cursor.execute(sql_query, (self._key_name, date.today()))
+		result = cursor.fetchone()
+
+		if not result:
+			sql_insert = "INSERT INTO keyboard_key(name, count, date)\
+										VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE name=name;"
+			cursor.execute(sql_insert, (self._key_name, 0, date.today()))
+		else:
+			self._count = result['count']
+
+		self._disconnect(cursor)
 
 
 	def __repr__(self):
