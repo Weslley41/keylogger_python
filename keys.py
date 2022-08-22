@@ -16,7 +16,7 @@ class Key():
 		return f'Instance of Key: (name: {self._key_name}, count: {self._count})'
 
 
-	def connect(self):
+	def _connect(self):
 		try:
 			mysql_configs = json.loads(os.getenv('MYSQL_CONFIG'))
 			connection = mysql.connector.connect(**mysql_configs)
@@ -36,9 +36,13 @@ class Key():
 					sys.exit()
 
 		self._connection = connection
+		return self._connection.cursor(dictionary=True)
 
 
-	def disconnect(self):
+	def _disconnect(self, cursor_to_close=None):
+		if cursor_to_close:
+			cursor_to_close.close()
+		self._connection.commit()
 		self._connection.close()
 
 
