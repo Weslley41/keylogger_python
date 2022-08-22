@@ -43,7 +43,7 @@ class Key():
 			return self._count
 
 		cursor = self._connection.connect()
-		sql_query = "select count FROM keyboard_key WHERE (name = %s AND date = %s);"
+		sql_query = "SELECT count FROM keyboard_key WHERE (name = %s AND date = %s);"
 		cursor.execute(sql_query, (self._key_name, day))
 		result = cursor.fetchone()
 
@@ -56,6 +56,8 @@ class Key():
 
 class Keyboard():
 	_keys = {}
+	_connection = Connection()
+	_count = 0
 
 	def __repr__(self):
 		return 'Instance of Keyboard'
@@ -68,8 +70,15 @@ class Keyboard():
 			self._keys[keyboard_key].increment()
 
 
-	def get_count(self, day=None):
-		return 0
+	def get_count(self, day=date.today()):
+		cursor = self._connection.connect()
+		sql_query = "SELECT SUM(count) as total_count FROM keyboard_key WHERE date = %s;"
+		cursor.execute(sql_query, (day,))
+		result = cursor.fetchone()
+		self._connection.disconnect(cursor)
+
+		return result['total_count']
+
 
 # For tests
 # key = Key('enter')
