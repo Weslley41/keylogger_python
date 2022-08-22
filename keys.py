@@ -88,28 +88,26 @@ class Key():
 
 
 class Keyboard():
-	_keys = []
-	_count = 0
-
-	def __init__(self):
-		# Instance all keys on list
-		pass
-
+	_keys = {}
 
 	def __repr__(self):
 		return 'Instance of Keyboard'
 
 
-	def get_count(self, day=None):
-		if not day:
-			return self._count
+	def add(self, keyboard_key):
+		if keyboard_key not in self._keys:
+			self._keys[keyboard_key] = Key(keyboard_key)
+		else:
+			self._keys[keyboard_key].increment()
 
+
+	def get_count(self, day=None):
 		return 0
 
 # For tests
-key = Key('enter')
-print(key)
-key.increment()
-print(key)
-print(key.count('2022-08-22'))
-print(key.count('2022-08-21'))
+# key = Key('enter')
+# print(key)
+# key.increment()
+# print(key)
+# print(key.count('2022-08-22'))
+# print(key.count('2022-08-21'))
