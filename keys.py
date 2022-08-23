@@ -8,20 +8,16 @@ class Key():
 
 	def __init__(self, key_name):
 		self._key_name = key_name
-		cursor = self._connection.connect()
-		sql_query = "SELECT count FROM keyboard_key\
-								WHERE(name=%s AND date=%s);"
-		cursor.execute(sql_query, (self._key_name, date.today()))
-		result = cursor.fetchone()
+		self._count = self.count(date.today())
 
-		if not result:
+		if not self._count:
+			cursor = self._connection.connect()
 			sql_insert = "INSERT INTO keyboard_key(name, count, date)\
 										VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE name=name;"
-			cursor.execute(sql_insert, (self._key_name, 0, date.today()))
+			cursor.execute(sql_insert, (self._key_name, 1, date.today()))
+			self._connection.disconnect(cursor)
 		else:
-			self._count = result['count']
-
-		self._connection.disconnect(cursor)
+			self.increment()
 
 
 	def __repr__(self):
@@ -49,7 +45,7 @@ class Key():
 
 		if not result:
 			print('No data from this date or invalid format.')
-			return 0
+			return None
 		else:
 			return result['count']
 

