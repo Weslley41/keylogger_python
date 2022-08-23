@@ -44,11 +44,7 @@ class Key():
 		result = cursor.fetchone()
 		self._connection.disconnect()
 
-		if not result:
-			print('No data from this date or invalid format.')
-			return None
-		else:
-			return result['count']
+		return None if not result else result['count']
 
 
 class Keyboard():
