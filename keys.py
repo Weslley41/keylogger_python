@@ -42,6 +42,7 @@ class Key():
 		sql_query = "SELECT count FROM keyboard_key WHERE (name = %s AND date = %s);"
 		cursor.execute(sql_query, (self._key_name, day))
 		result = cursor.fetchone()
+		self._connection.disconnect()
 
 		if not result:
 			print('No data from this date or invalid format.')
@@ -66,7 +67,7 @@ class Keyboard():
 			self._keys[keyboard_key].increment()
 
 
-	def get_count(self, day=date.today()):
+	def count(self, day=date.today()):
 		cursor = self._connection.connect()
 		sql_query = "SELECT SUM(count) as total_count FROM keyboard_key WHERE date = %s;"
 		cursor.execute(sql_query, (day,))
@@ -76,10 +77,36 @@ class Keyboard():
 		return result['total_count']
 
 
-# For tests
-# key = Key('enter')
-# print(key)
-# key.increment()
-# print(key)
-# print(key.count('2022-08-22'))
-# print(key.count('2022-08-21'))
+	def get_top_keys(self, day=date.today(), amount=5):
+		cursor = self._connection.connect()
+		sql_query = "SELECT name, count FROM keyboard_key\
+								WHERE date = %s ORDER BY count DESC LIMIT %s;"
+		cursor.execute(sql_query, (day, amount))
+		result = cursor.fetchall()
+		self._connection.disconnect()
+
+		return result
+
+
+	def get_keys_log(self, day=date.today()):
+		cursor = self._connection.connect()
+		sql_query = "SELECT name, count FROM keyboard_key\
+								WHERE date = %s ORDER BY count DESC;"
+		cursor.execute(sql_query, (day,))
+		result = cursor.fetchall()
+		self._connection.disconnect()
+
+		return result
+
+
+	def get_interval_log(self, start, end):
+		cursor = self._connection.connect()
+		sql_query = "SELECT date, SUM(count) AS count\
+								FROM keyboard_key\
+								WHERE date BETWEEN %s AND %s\
+								GROUP BY date ORDER BY date;"
+		cursor.execute(sql_query, (start, end))
+		result = cursor.fetchall()
+		self._connection.disconnect()
+
+		return result
