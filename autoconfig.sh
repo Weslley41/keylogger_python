@@ -22,7 +22,9 @@ GRANT ALL PRIVILEGES ON keylogger.* TO '$user'@'$host';
 " > autoconfig.sql;
 
 clear;
-echo "Access your sql to run configs:";
-mysql -u root -p < autoconfig.sql;
+echo "Access your mysql user with privileges for create a new user:";
+echo "Your user:";
+read root_user;
+mysql -u $root_user -p < autoconfig.sql;
 rm autoconfig.sql;
 echo "MYSQL_CONFIG = {\"user\": \"$user\", \"password\": \"$password\", \"host\": \"$host\", \"database\": \"keylogger\"}" > .env;
