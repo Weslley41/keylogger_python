@@ -28,3 +28,6 @@ read root_user;
 mysql -u $root_user -p < autoconfig.sql;
 rm autoconfig.sql;
 echo "MYSQL_CONFIG = {\"user\": \"$user\", \"password\": \"$password\", \"host\": \"$host\", \"database\": \"keylogger\"}" > .env;
+
+# Set directory of libs
+echo "PYTHONPATH='lib/'" >> .env
