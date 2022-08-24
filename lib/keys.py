@@ -16,6 +16,7 @@ class Key():
 										VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE name=name;"
 			cursor.execute(sql_insert, (self._key_name, 1, date.today()))
 			self._connection.disconnect(cursor)
+			self._count = 1
 		else:
 			self.increment()
 
