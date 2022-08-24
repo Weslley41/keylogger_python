@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# from https://stackoverflow.com/a/52552095
+echo -n "Checking dependencies... "
+for name in python3 mysql shc
+do
+  [[ $(which $name 2>/dev/null) ]] || { echo -en "\n$name needs to be installed.";deps=1; }
+done
+[[ $deps -ne 1 ]] && echo "OK" || { echo -en "\nInstall the above and rerun this script\n";exit 1; }
+
 # Config mysql database and env variables
 echo 'Define you user for keylogger database: ';
 read user;
