@@ -102,7 +102,7 @@ def show_weekly_graphic():
 	start, end = date.today() - timedelta(days=6), date.today()
 	data = keyboard.get_interval_log(start, end)
 
-	plt.figure(figsize=(8, 4.5))
+	plt.figure("Keylogger graphic", figsize=(8, 4.5))
 	plt.plot(
 		[row['date'] for row in data],
 		[row['count'] for row in data]
