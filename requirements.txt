@@ -11,6 +11,7 @@
 ################################################################################
 
 keyboard
+matplotlib
 mysql-connector-python
 pipenv
 pylint
