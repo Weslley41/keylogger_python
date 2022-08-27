@@ -43,7 +43,7 @@ class Key():
 		sql_query = "SELECT count FROM keyboard_key WHERE (name = %s AND date = %s);"
 		cursor.execute(sql_query, (self._key_name, day))
 		result = cursor.fetchone()
-		self._connection.disconnect()
+		self._connection.disconnect(cursor)
 
 		return None if not result else result['count']
 

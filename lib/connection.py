@@ -24,7 +24,7 @@ class Connection():
 					raise Exception(error) from error
 
 		self._connection = connection
-		return self._connection.cursor(dictionary=True)
+		return self._connection.cursor(dictionary=True, buffered=True)
 
 
 	def disconnect(self, cursor_to_close=None):
