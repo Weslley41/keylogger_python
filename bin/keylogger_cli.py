@@ -37,7 +37,7 @@ def input_date():
 	os.system('clear')
 	print('tricks:\n\
   0: back\n\
-  today: show today\'s most used keys')
+  today: show today\'s data')
 
 	day = input('Choice a date(YYYY-MM-DD): ')
 
