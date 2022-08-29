@@ -4,14 +4,14 @@ from datetime import date, timedelta
 from pathlib import Path
 from time import sleep
 from matplotlib import pyplot as plt
-
-from keys import Keyboard
+import requests
 
 
 def show_menu():
+	keyboard_count = requests.get('http://localhost:8000/count/', timeout=10).text
 	os.system('clear')
 	print(' Keylogger '.center(50, '-'))
-	print(f'Today: {date.today()}'.ljust(24), f'Counted keys: {keyboard.count()}'.rjust(25))
+	print(f'Today: {date.today()}'.ljust(24), f'Counted keys: {keyboard_count}'.rjust(25))
 	print('-'*50)
 
 	print('\n\
@@ -76,7 +76,7 @@ def format_json_to_text(title, day, json_data):
 def show_most_used_keys():
 	day = input_date()
 	if day:
-		data = keyboard.get_top_keys(day)
+		data = requests.get(f'http://localhost:8000/top_keys/?day={day}', timeout=10).json()
 		print(format_json_to_text('Most used keys', day, data))
 		press_to_back()
 
@@ -84,7 +84,7 @@ def show_most_used_keys():
 def get_log_file():
 	day = input_date()
 	if day:
-		data = keyboard.get_keys_log(day)
+		data = requests.get(f'http://localhost:8000/daily_log/?day={day}', timeout=10).json()
 		if data:
 			filename = f'{Path.home()}/keyboard_logs/keyboard_log_{day}.txt'
 			os.makedirs(os.path.dirname(filename), exist_ok=True)
@@ -100,7 +100,7 @@ def get_log_file():
 
 def show_weekly_graphic():
 	start, end = date.today() - timedelta(days=6), date.today()
-	data = keyboard.get_interval_log(start, end)
+	data = requests.get(f'http://localhost:8000/interval_log/{start}/to/{end}', timeout=10).json()
 
 	plt.figure("Keylogger graphic", figsize=(8, 4.5))
 	plt.plot(
@@ -130,6 +130,5 @@ def main():
 
 
 if __name__ == '__main__':
-  keyboard = Keyboard()
   DATE_REGEX = r'(\d{4})-(\d{2}|\d)-(\d{2}|\d)'
   main()
