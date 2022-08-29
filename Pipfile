@@ -9,6 +9,9 @@ keyboard = "*"
 pipenv = "*"
 pylint = "*"
 matplotlib = "*"
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+requests = "*"
 
 [dev-packages]
 

