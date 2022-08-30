@@ -65,7 +65,7 @@ def format_json_to_text(title, day, json_data):
 	string += '-' * 50 + '\n'
 
 	for key in json_data:
-		string += key['name'].ljust(40) + str(key['count']).rjust(10) + '\n'
+		string += key.ljust(40) + str(json_data[key]).rjust(10) + '\n'
 
 	if not json_data:
 		string += 'Data not found\n'.center(50)
@@ -103,10 +103,7 @@ def show_weekly_graphic():
 	data = requests.get(f'http://localhost:8000/interval_log/{start}/to/{end}', timeout=10).json()
 
 	plt.figure("Keylogger graphic", figsize=(8, 4.5))
-	plt.plot(
-		[row['date'] for row in data],
-		[row['count'] for row in data]
-	)
+	plt.plot(data.keys(), data.values())
 	plt.title(f'Weekly graphic: {start} to {end}')
 	plt.grid(True)
 	plt.show()

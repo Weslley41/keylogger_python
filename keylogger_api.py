@@ -17,6 +17,15 @@ app.add_middleware(
   allow_headers=["*"],
 )
 
+def format_json(data, column_name='name'):
+  new_data = {}
+
+  for row in data:
+    new_data[row[column_name]] = row['count']
+
+  return new_data
+
+
 @app.get("/")
 def home():
 	return {"msg": "Welcome to Keylogger API, see localhost:8000/docs"}
@@ -37,7 +46,8 @@ def top_keys(day:str = date.today(), amount:int = 5):
     Args:
       day format: YYYY-MM-DD
   """
-  return keyboard.get_top_keys(day, amount)
+  data = keyboard.get_top_keys(day, amount)
+  return format_json(data)
 
 
 @app.get("/daily_log/")
@@ -46,7 +56,8 @@ def daily_log(day:str = date.today()):
     Args:
       day format: YYYY-MM-DD
   """
-  return keyboard.get_keys_log(day)
+  data = keyboard.get_keys_log(day)
+  return format_json(data)
 
 
 @app.get("/interval_log/{start}/to/{end}")
@@ -54,4 +65,5 @@ def interval_log(start:str, end:str):
   """
     Args format: YYYY-MM-DD
   """
-  return keyboard.get_interval_log(start, end)
+  data = keyboard.get_interval_log(start, end)
+  return format_json(data, 'date')
