@@ -3,6 +3,7 @@
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![Shell Script](https://img.shields.io/badge/shell_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white)
 [![CodeFactor](https://www.codefactor.io/repository/github/weslley41/keylogger_python/badge?style=for-the-badge)](https://www.codefactor.io/repository/github/weslley41/keylogger_python)
 [![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen?style=for-the-badge)](https://github.com/PyCQA/pylint)
 </div>
@@ -62,11 +63,14 @@ ctrl                                           248
 <div align="center">
 
 [![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/weslley41/keylogger_python)](https://www.python.org/)
+[![GitHub Pipenv locked dependency version](https://img.shields.io/github/pipenv/locked/dependency-version/weslley41/keylogger_python/fastapi)](https://pypi.org/project/fastapi/)
 [![GitHub Pipenv locked dependency version](https://img.shields.io/github/pipenv/locked/dependency-version/weslley41/keylogger_python/keyboard)](https://pypi.org/project/keyboard/)
 [![GitHub Pipenv locked dependency version](https://img.shields.io/github/pipenv/locked/dependency-version/weslley41/keylogger_python/matplotlib)](https://pypi.org/project/matplotlib/)
 [![GitHub Pipenv locked dependency version](https://img.shields.io/github/pipenv/locked/dependency-version/weslley41/keylogger_python/mysql-connector-python)](https://pypi.org/project/mysql-connector-python/)
 [![GitHub Pipenv locked dependency version](https://img.shields.io/github/pipenv/locked/dependency-version/weslley41/keylogger_python/pipenv)](https://pypi.org/project/pipenv/)
 [![GitHub Pipenv locked dependency version](https://img.shields.io/github/pipenv/locked/dependency-version/weslley41/keylogger_python/pylint)](https://pypi.org/project/pylint/)
+[![GitHub Pipenv locked dependency version](https://img.shields.io/github/pipenv/locked/dependency-version/weslley41/keylogger_python/requests)](https://pypi.org/project/requests/)
+[![GitHub Pipenv locked dependency version](https://img.shields.io/github/pipenv/locked/dependency-version/weslley41/keylogger_python/uvicorn)](https://pypi.org/project/uvicorn/)
 </div>
 Para fazer a configuração você precisa ter instalado a versão 3.10 do Python, o pipenv e um servidor mysql rodando. Com isso basta executar o arquivo 'bin/autoconfig.sh' e preencher os campos necessários para configurar os serviços locais.
 
