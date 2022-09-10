@@ -1,19 +1,19 @@
-from datetime import date
+from datetime import date, timedelta, datetime
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 from keys import Keyboard
 
 app = FastAPI()
 keyboard = Keyboard()
 
-origins = ["*"]
+origins = ["http://localhost:5173"]
 
 app.add_middleware(
   CORSMiddleware,
   allow_origins=origins,
   allow_credentials=True,
-  allow_methods=["*"],
+  allow_methods=["GET"],
   allow_headers=["*"],
 )
 
@@ -60,10 +60,28 @@ def daily_log(day:str = date.today()):
   return format_json(data)
 
 
-@app.get("/interval_log/{start}/to/{end}")
-def interval_log(start:str, end:str):
+@app.get("/interval_log/{start}/to/{end}", status_code=status.HTTP_200_OK)
+def interval_log(start:str, end:str, response:Response):
   """
     Args format: YYYY-MM-DD
   """
   data = keyboard.get_interval_log(start, end)
-  return format_json(data, 'date')
+  if data:
+    return format_json(data, 'date')
+
+  response.status_code = status.HTTP_404_NOT_FOUND
+
+
+@app.get("/weekly_log/")
+def weekly_log():
+  end = date.today()
+  start = end - timedelta(days=6)
+  data = keyboard.get_interval_log(start, end)
+
+  new_data = {}
+  for day in data:
+    str_day = str(day['date'])
+    label = datetime.strptime(str_day, '%Y-%m-%d').strftime('%a')
+    new_data[label] = day['count']
+
+  return new_data
