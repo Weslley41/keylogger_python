@@ -64,17 +64,18 @@ class Keyboard():
 			self._keys[keyboard_key].increment()
 
 
-	def count(self, day=date.today()):
+	def get_oldest_date(self):
 		cursor = self._connection.connect()
-		sql_query = "SELECT SUM(count) as total_count FROM keyboard_key WHERE date = %s;"
-		cursor.execute(sql_query, (day,))
+		sql_query = "SELECT MIN(date) AS date FROM keyboard_key;"
+		cursor.execute(sql_query)
 		result = cursor.fetchone()
-		self._connection.disconnect(cursor)
+		self._connection.disconnect()
 
-		return result['total_count']
+		return result['date']
 
 
-	def get_top_keys(self, day=date.today(), amount=5):
+	# Most-used keys (per day, interval, all time)
+	def get_most_used_keys(self, day=date.today(), amount=5):
 		cursor = self._connection.connect()
 		sql_query = "SELECT name, count FROM keyboard_key\
 								WHERE date = %s ORDER BY count DESC LIMIT %s;"
@@ -85,7 +86,31 @@ class Keyboard():
 		return result
 
 
-	def get_keys_log(self, day=date.today()):
+	def get_interval_most_used_keys(self, start, end, amount=5):
+		cursor = self._connection.connect()
+		sql_query = "SELECT name, SUM(count) AS count FROM keyboard_key\
+								WHERE date BETWEEN %s AND %s GROUP BY name\
+								ORDER BY count DESC LIMIT %s;"
+		cursor.execute(sql_query, (start, end, amount))
+		result = cursor.fetchall()
+		self._connection.disconnect()
+
+		return result
+
+
+	def get_all_time_most_used_keys(self, amount=5):
+		cursor = self._connection.connect()
+		sql_query = "SELECT name, SUM(count) AS count FROM keyboard_key\
+								GROUP BY name ORDER BY count DESC LIMIT %s;"
+		cursor.execute(sql_query, (amount,))
+		result = cursor.fetchall()
+		self._connection.disconnect()
+
+		return result
+
+
+	# List of used keys (per day, interval, all time)
+	def get_used_keys(self, day=date.today()):
 		cursor = self._connection.connect()
 		sql_query = "SELECT name, count FROM keyboard_key\
 								WHERE date = %s ORDER BY count DESC;"
@@ -96,13 +121,59 @@ class Keyboard():
 		return result
 
 
-	def get_interval_log(self, start, end):
+	def get_interval_used_keys(self, start, end):
+		cursor = self._connection.connect()
+		sql_query = "SELECT name, SUM(count) AS count FROM keyboard_key\
+								WHERE date BETWEEN %s AND %s GROUP BY name\
+								ORDER BY count DESC;"
+		cursor.execute(sql_query, (start, end))
+		result = cursor.fetchall()
+		self._connection.disconnect()
+
+		return result
+
+
+	def get_all_time_used_keys(self):
+		cursor = self._connection.connect()
+		sql_query = "SELECT name, SUM(count) AS count FROM keyboard_key\
+								GROUP BY name ORDER BY count DESC;"
+		cursor.execute(sql_query)
+		result = cursor.fetchall()
+		self._connection.disconnect()
+
+		return result
+
+
+	# Use count (per day, interval, all time)
+	def get_use_count(self, day=date.today()):
+		cursor = self._connection.connect()
+		sql_query = "SELECT SUM(count) as total_count FROM keyboard_key WHERE date = %s;"
+		cursor.execute(sql_query, (day,))
+		result = cursor.fetchone()
+		self._connection.disconnect(cursor)
+
+		return result['total_count']
+
+
+	def get_interval_use_count(self, start, end):
 		cursor = self._connection.connect()
 		sql_query = "SELECT date, SUM(count) AS count\
 								FROM keyboard_key\
 								WHERE date BETWEEN %s AND %s\
 								GROUP BY date ORDER BY date;"
 		cursor.execute(sql_query, (start, end))
+		result = cursor.fetchall()
+		self._connection.disconnect()
+
+		return result
+
+
+	def get_all_time_use_count(self):
+		cursor = self._connection.connect()
+		sql_query = "SELECT date, SUM(count) AS count\
+								FROM keyboard_key\
+								GROUP BY date ORDER BY date;"
+		cursor.execute(sql_query)
 		result = cursor.fetchall()
 		self._connection.disconnect()
 
