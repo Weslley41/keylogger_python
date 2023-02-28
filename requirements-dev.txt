@@ -10,4 +10,6 @@
 # `Pipfile.lock` and then regenerate `requirements*.txt`.
 ################################################################################
 
-autopep8
+autopep8==2.0.1
+pycodestyle==2.10.0 ; python_version >= '3.6'
+tomli==2.0.1 ; python_version < '3.11'
